@@ -21,6 +21,8 @@ public class MainActivity extends FragmentActivity {
 
 	private static final String MOCK_GPS_PROVIDER_INDEX = "GpsMockProviderIndex";
 
+	private boolean mMockGpsProviderInitialized;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,6 +35,7 @@ public class MainActivity extends FragmentActivity {
 	private MockGpsProvider mMockGpsProviderTask = null;
 	private Integer mMockGpsProviderIndex = 0;
 
+	@SuppressWarnings("unused")
 	private void initMockGpsProvider() {
 		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -72,6 +75,8 @@ public class MainActivity extends FragmentActivity {
 				// create new AsyncTask and pass the list of GPS coordinates
 				mMockGpsProviderTask = new MockGpsProvider();
 				mMockGpsProviderTask.execute(coordinates);
+
+				mMockGpsProviderInitialized = true;
 			}catch(Exception e){
 			}
 		}
@@ -89,13 +94,15 @@ public class MainActivity extends FragmentActivity {
 	public void onDestroy() {
 		super.onDestroy();
 
-		// stop the mock GPS provider by calling the 'cancel(true)' method
-		mMockGpsProviderTask.cancel(true);
-		mMockGpsProviderTask = null;
+		if(mMockGpsProviderInitialized){
+			// stop the mock GPS provider by calling the 'cancel(true)' method
+			mMockGpsProviderTask.cancel(true);
+			mMockGpsProviderTask = null;
 
-		// remove it from the location manager
-		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.removeTestProvider(MockGpsProvider.GPS_MOCK_PROVIDER);
+			// remove it from the location manager
+			final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			locationManager.removeTestProvider(MockGpsProvider.GPS_MOCK_PROVIDER);
+		}
 	}
 
 	private class MockGpsProvider extends AsyncTask<String, Integer, Void> {
