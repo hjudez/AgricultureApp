@@ -33,11 +33,8 @@ public class MyTTGeometricLayer extends TTGeometricLayer {
 
 		paint.reset();
 		paint.setAntiAlias(true);
-		paint.setAlpha(255);
-		paint.setColor(Color.parseColor("#E5743B"));
+		paint.setColor(Color.parseColor("#CCE5743B"));
 		paint.setStyle(Style.FILL);
-		paint.setStrokeWidth(10);
-		paint.setStrokeCap(Paint.Cap.ROUND);
 
 		for(int i = 0; i < pathLeft.size() - 1; i++){
 			drawSegment(canvas, matrix, mapPosition, pathLeft.get(i), pathLeft.get(i + 1), pathRight.get(i), pathRight.get(i + 1), paint);

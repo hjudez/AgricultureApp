@@ -88,6 +88,11 @@ public class MapFragment extends Fragment {
 
 				@Override
 				public void onLocationChanged(double latitude, double longitude, float accuracy) {
+					if(accuracy > 15){
+						//discard non accurate locations
+						return;
+					}
+
 					if(previousLocation != null){
 						final int mapZoom = mMapView.getZoom();
 
@@ -101,13 +106,13 @@ public class MapFragment extends Fragment {
 
 						final Point point = computePosition(latitude, longitude, mapZoom);
 						final Point pointLeft = new Point(
-								point.x + (int) (Math.sin(bearingRadians + Constants.APARATO_ANGLE) * Constants.POINTS_HYPOTENUSE),
-								point.y + (int) (Math.cos(bearingRadians + Constants.APARATO_ANGLE) * -Constants.POINTS_HYPOTENUSE));
+								(int) Math.round(point.x + Math.sin(bearingRadians + Constants.APARATO_ANGLE) * Constants.POINTS_HYPOTENUSE),
+								(int) Math.round(point.y + Math.cos(bearingRadians + Constants.APARATO_ANGLE) * -Constants.POINTS_HYPOTENUSE));
 						mPathLeft.add(pointLeft);
 
 						final Point pointRight = new Point(
-								point.x + (int) (Math.sin(bearingRadians - Constants.APARATO_ANGLE) * Constants.POINTS_HYPOTENUSE),
-								point.y + (int) (Math.cos(bearingRadians - Constants.APARATO_ANGLE) * -Constants.POINTS_HYPOTENUSE));
+								(int) Math.round(point.x + Math.sin(bearingRadians - Constants.APARATO_ANGLE) * Constants.POINTS_HYPOTENUSE),
+								(int) Math.round(point.y + Math.cos(bearingRadians - Constants.APARATO_ANGLE) * -Constants.POINTS_HYPOTENUSE));
 						mPathRight.add(pointRight);
 					}
 
